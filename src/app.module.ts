@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { WhoisModule } from './whois/whois.module';
-import { WhoisDataModule } from './whois-data/whois-data.module';
 
 @Module({
   imports: [
@@ -22,7 +21,6 @@ import { WhoisDataModule } from './whois-data/whois-data.module';
     AuthModule,
     UserModule,
     WhoisModule,
-    WhoisDataModule,
   ],
 })
 export class AppModule {}

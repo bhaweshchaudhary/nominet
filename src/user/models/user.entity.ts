@@ -1,4 +1,4 @@
-import { WhoisData } from 'src/whois-data/models/whois-data.entity';
+import { WhoisData } from 'src/whois/models/whois-data.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()

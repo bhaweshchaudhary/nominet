@@ -1,14 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import * as whois from 'whois-json';
+import { WhoisData } from '../models/whois-data.entity';
 
 @Injectable()
 export class WhoisService {
-  async lookupDomain(domain: string): Promise<any> {
+  constructor(
+    @InjectRepository(WhoisData)
+    private readonly whoisDataRepository: Repository<WhoisData>,
+  ) {}
+
+  async lookupDomain(domain: string, userId: number): Promise<WhoisData> {
     const data = await whois(domain);
-    return this.parseRelevantFields(data);
+    const whoisData = this.parseRelevantFields(data);
+
+    const whoisDataToInsert = {
+      ...whoisData,
+      userId,
+      nameServer: whoisData.nameServer,
+    };
+
+    await this.whoisDataRepository.insert(whoisDataToInsert);
+
+    return await this.whoisDataRepository.findOne({
+      where: { domainName: whoisData.domainName, userId },
+      relations: ['user'],
+    });
   }
 
-  private parseRelevantFields(data: any): any {
+  private parseRelevantFields(data: any): Partial<WhoisData> {
     return {
       domainName: data.domainName,
       registryDomainId: data.registryDomainId,
