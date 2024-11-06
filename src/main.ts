@@ -1,11 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import errsole from 'errsole';
+import ErrsoleSequelize from 'errsole-sequelize';
+import * as morgan from 'morgan';
+
+errsole.initialize({
+  storage: new ErrsoleSequelize({
+    dialect: 'sqlite',
+    storage: '/tmp/logs.sqlite',
+  }),
+});
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const logger = new Logger('Main');
-  app.useLogger(logger);
+  app.use(morgan('combined'));
   await app.listen(3000);
 }
 bootstrap();

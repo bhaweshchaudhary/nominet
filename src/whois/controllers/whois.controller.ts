@@ -15,7 +15,6 @@ export class WhoisController {
     @Request() req,
   ): Promise<WhoisData> {
     const userId = req.user.userId;
-    console.log('Calling lookup with userId:', userId);
     return this.whoisService.lookupDomain(domain, userId);
   }
 }
